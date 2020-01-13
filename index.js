@@ -26,6 +26,9 @@ const generateItemElement = function (item) {
         <button class='shopping-item-delete js-item-delete'>
           <span class='button-label'>delete</span>
         </button>
+        <button class='shopping-item-edit js-item-edit'>
+          <span class='button-label'>edit</span>
+        </button>
       </div>
     </li>`;
 };
@@ -145,6 +148,37 @@ const handleToggleFilterClick = function () {
   });
 };
 
+const editTitleClick = function(id) {
+  const index = store.items.findIndex(item => item.id === id);
+  console.log(index);
+  store.items[index].name = `<input type='text' placeholder='Enter New Title' class='js-editTextInput'>
+    <button type='submit' class='js-edit-submit'>Submit</button>`;
+}
+
+const handleEditTitleClick = function() {
+  $('.js-shopping-list').on('click', '.js-item-edit', event => {
+    const id = getItemIdFromElement(event.currentTarget);
+    editTitleClick(id);
+    render();
+  });
+}
+
+const editTitleSubmit = function(id, newTitle) {
+  const index = store.items.findIndex(item => item.id === id);
+  store.items[index].name = newTitle;
+}
+
+const handleEditTitleSubmit = function () {
+  $('.js-shopping-list').on('click', '.js-edit-submit', event => {
+    const id = getItemIdFromElement(event.currentTarget);
+    const newTitle = $('.js-editTextInput').val();
+    console.log(newTitle);
+    console.log(typeof newTitle);
+    editTitleSubmit(id, newTitle);
+    render();
+  });
+}
+
 /**
  * This function will be our callback when the
  * page loads. It is responsible for initially 
@@ -160,6 +194,8 @@ const handleShoppingList = function () {
   handleItemCheckClicked();
   handleDeleteItemClicked();
   handleToggleFilterClick();
+  handleEditTitleClick();
+  handleEditTitleSubmit();
 };
 
 // when the page loads, call `handleShoppingList`
